@@ -1,2 +1,2 @@
-from ._gridshiftpp import GridShiftPP
+from ._gridshift import GridShift
 from ._meanshiftpp import MeanShiftPP

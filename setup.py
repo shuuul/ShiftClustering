@@ -8,8 +8,8 @@ ext_modules = [
               sources=["shiftclustering/_meanshiftpp.pyx"],
               language="c++",
               include_dirs=[numpy.get_include(), 'lib']),
-    Extension("shiftclustering._gridshiftpp",
-              sources=["shiftclustering/_gridshiftpp.pyx"],
+    Extension("shiftclustering._gridshift",
+              sources=["shiftclustering/_gridshift.pyx"],
               language="c++",
               include_dirs=[numpy.get_include(), 'lib'])
 ]
