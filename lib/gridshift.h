@@ -32,48 +32,44 @@ void grid_cluster(int n,
 
     // new clustering at grids
     int temp = 0;
+
     for (int i = 0; i < n; i++) {
         for (int k = 0; k < d; k++) {
+            // On dimension k, assign the bin to point i
             bin[k] = X_shifted[i * d + k] / bandwidth;
         }
+        // If the current_bin is not already in the 'means' map, it is initialized
         if (cluster_grid.find(bin) == cluster_grid.end()) {
             cluster_grid[bin] = make_pair(std::vector<float>(d, 0), 0);
         }
+        // Add the current point to the sum vector
         for (int k = 0; k < d; k++){
             cluster_grid[bin].first[k] += X_shifted[i * d + k];
         }
+        // Increment the count of bin
         cluster_grid[bin].second++;
+        // Update active grid cells
         if (map_cluster.find(bin) == map_cluster.end()){
             map_cluster[bin] = temp++;
         }
+        // Update the inverse map
         membershipp[i] = map_cluster[bin] * 1.0;
     }
 
-
-    //copy(membershipp.begin(), membershipp.end(), membership);
     while (iter <= iterations){
         iter++;
         means.clear();
         for (it = cluster_grid.begin(); it != cluster_grid.end(); ++it ){
-
             for (int j = 0; j < pow(base, d); j++) {
-
                 for (int k = 0; k < d; k++) {
-
                     current_bin[k] = it->first[k] + offsets[j * d + k];
-
                     if (j == 0){
-
                         bin[k] =  it->first[k] ;
-
                     }
-
-
                 }
 
                 // If neighbor exists, add it to the mean
                 if (cluster_grid.find(current_bin) != cluster_grid.end()) {
-
                     if (means.find(current_bin) == means.end()) {
                         means[current_bin] = make_pair(std::vector<float>(d, 0), 0);
                     }
@@ -81,12 +77,10 @@ void grid_cluster(int n,
                     for (int k = 0; k < d; k++) {
                         means[current_bin].first[k] += cluster_grid[bin].first[k] * 1.0;
                     }
-
                     means[current_bin].second += cluster_grid[bin].second;
-                    }
                 }
-
             }
+        }
 
          for (it = cluster_grid.begin(); it != cluster_grid.end(); ++it ){
             for (int k = 0; k < d; k++) {
@@ -96,7 +90,6 @@ void grid_cluster(int n,
             for (int k = 0; k < d; k++) {
                 cluster_grid[current_bin].first[k] = means[current_bin].first[k] * 1.0 / means[current_bin].second;
             }
-
         }
 
         // update cluster grid and membership
@@ -127,26 +120,20 @@ void grid_cluster(int n,
 
             if (map_cluster.find(bin) == map_cluster.end()){
                 map_cluster[bin] = temp++;
-//                printf("%d\n", temp);
             }
-
-            //replace (membershipp.begin(), membershipp.end(), map_cluster_old[current_bin], map_cluster[bin]);
             clus[map_cluster_old[current_bin]] = map_cluster[bin];
         }
-        //membershipp_old = membershipp;
+
         int break_points = 0;
         for (it2 = clus.begin(); it2 != clus.end(); ++it2) {
-        if (it2->first !=  it2->second){
-            replace (membershipp.begin(), membershipp.end(), it2->first, it2->second);
-            break_points += it2->first - it2->second;
+            if (it2->first !=  it2->second){
+                replace (membershipp.begin(), membershipp.end(), it2->first, it2->second);
+                break_points += it2->first - it2->second;
             }
-
         }
-        //if (membershipp_old == membershipp) {
         if (break_points == 0){
             break;
         }
-
     }
     copy(membershipp.begin(), membershipp.end(), membership);
 
@@ -158,10 +145,9 @@ void grid_cluster(int n,
 
             for (int k = 0; k < d; k++) {
                 bins[itt * d + k] = it->second.first[k] *1.0 / it->second.second;
-
             }
             itt++;
         }
-    copy(bins.begin(), bins.end(),X_shifted);
-    copy(k_num2.begin(), k_num2.end(),k_num);
+    copy(bins.begin(), bins.end(), X_shifted);
+    copy(k_num2.begin(), k_num2.end(), k_num);
 }
