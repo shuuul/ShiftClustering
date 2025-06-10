@@ -13,7 +13,9 @@ dependencies = [
 
 [project.optional-dependencies]
 benchmark = [
+    "numba>=0.61.2",
     "scikit-learn>=1.7",
+    "torch>=2.7.1",
 ]
 
 [build-system]
