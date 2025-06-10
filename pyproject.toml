@@ -1,19 +1,19 @@
 [project]
 name = "shiftclustering"
 version = "0.1.0"
-description = "Add your description here"
+description = "ShiftClustering is a Python package for clustering data using the MeanShiftPP and GridShift algorithms."
 readme = "README.md"
 authors = [
     { name = "Shu Li", email = "zetarylee@gmail.com" }
 ]
-requires-python = ">=3.12"
+requires-python = ">=3.10"
 dependencies = [
-    "numpy>=2.2.6",
+    "numpy>=2",
 ]
 
 [project.optional-dependencies]
 benchmark = [
-    "scikit-learn>=1.7.0",
+    "scikit-learn>=1.7",
 ]
 
 [build-system]
@@ -44,7 +44,6 @@ skip = "pp* *-musllinux*"
 
 [tool.cibuildwheel.macos]
 environment = { HOMEBREW_NO_AUTO_UPDATE = "1" }
-before-build = "brew install libomp"
 
 [tool.cibuildwheel.linux]
 before-build = "yum install -y gcc-c++ || apt-get update && apt-get install -y g++"

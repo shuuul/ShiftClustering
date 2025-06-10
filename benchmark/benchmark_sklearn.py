@@ -136,13 +136,13 @@ def main():
     print("Initializing clustering algorithms...")
     algorithms = {
         'MeanShift': MeanShift(bandwidth=bandwidth, bin_seeding=True, n_jobs=1),
-        'MeanShiftPP': MeanShiftPP(bandwidth=bandwidth, n_jobs=1),
-        'GridShift': GridShift(bandwidth=bandwidth, n_jobs=1)
+        'MeanShiftPP': MeanShiftPP(bandwidth=bandwidth),
+        'GridShift': GridShift(bandwidth=bandwidth)
     }
     
     # Run benchmarks
     results = {}
-    for algo_name, algo in algorithms.items():
+    for algo_name, algo in algorithms.items():  
         print(f"\nBenchmarking {algo_name}...")
         results[algo_name] = benchmark_clustering(algo, X, n_runs)
     
