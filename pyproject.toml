@@ -1,0 +1,50 @@
+[project]
+name = "shiftclustering"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Shu Li", email = "zetarylee@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "numpy>=2.2.6",
+]
+
+[project.optional-dependencies]
+benchmark = [
+    "scikit-learn>=1.7.0",
+]
+
+[build-system]
+requires = [
+    "scikit-build-core>=0.8.0",
+    "cython>=3.1.2",
+    "numpy>=1.20.0",
+]
+build-backend = "scikit_build_core.build"
+
+[tool.scikit-build]
+# Build settings
+build.verbose = true
+logging.level = "INFO"
+
+# CMake configuration
+cmake.args = [
+    "-DCMAKE_BUILD_TYPE=Release",
+]
+
+# Explicitly enable Cython support
+experimental = true
+
+[tool.cibuildwheel]
+# Optional: if you plan to build wheels for multiple platforms
+build = "cp38-* cp39-* cp310-* cp311-* cp312-*"
+skip = "pp* *-musllinux*"
+
+[tool.cibuildwheel.macos]
+environment = { HOMEBREW_NO_AUTO_UPDATE = "1" }
+before-build = "brew install libomp"
+
+[tool.cibuildwheel.linux]
+before-build = "yum install -y gcc-c++ || apt-get update && apt-get install -y g++"

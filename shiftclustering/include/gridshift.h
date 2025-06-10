@@ -30,7 +30,7 @@ void grid_cluster(int n,
     vector<int> membershipp(n);
     vector<int> membershipp_old(n);
 
-    // new clustering at grids
+    // new clustering at grids - initial binning
     int temp = 0;
 
     for (int i = 0; i < n; i++) {
@@ -59,6 +59,8 @@ void grid_cluster(int n,
     while (iter <= iterations){
         iter++;
         means.clear();
+        
+        // Process cluster grid updates
         for (it = cluster_grid.begin(); it != cluster_grid.end(); ++it ){
             for (int j = 0; j < pow(base, d); j++) {
                 for (int k = 0; k < d; k++) {

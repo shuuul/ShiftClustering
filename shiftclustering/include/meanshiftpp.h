@@ -39,6 +39,7 @@ void shift_cy(int n,
     // Store the current bin during the iterations
     vector<int> current_bin(d);
 
+    // First pass: bin all points
     for (int i = 0; i < n; i++) {
         // Bin point
         for (int k = 0; k < d; k++) {
@@ -53,6 +54,7 @@ void shift_cy(int n,
         }
     }
 
+    // Second pass: accumulate means
     for (int i = 0; i < n; i++) {
         // scan the bins in each dimension, 3*3*3 positions
         for (int j = 0; j < pow(base, d); j++) {
@@ -72,7 +74,7 @@ void shift_cy(int n,
         }
     }
 
-    // Set every point to the mean of its neighbors
+    // Third pass: set every point to the mean of its neighbors
     for (int i = 0; i < n; i++) {
         for (int k = 0; k < d; k++) {
             current_bin[k] = bins[i * d + k];
