@@ -1,13 +1,14 @@
 # ShiftClustering
 
-Fast clustering algorithms for Python.
+Fast clustering algorithms for Python with C++/Cython implementation and OpenMP parallel support.
 
 ## Features
 
-- **MeanShiftPP**: An optimized mean shift clustering algorithm
-- **GridShift**: A grid-based clustering algorithm  
-- **Scikit-learn Compatible**: Similar API to scikit-learn clustering algorithms
-- **High Performance**: C++ implementations with Cython wrappers
+- **MeanShiftPP**: Optimized mean shift clustering algorithm
+- **LocalShift**: Local shift algorithm for 3D point cloud optimization in cryo-EM contexts
+- **GridShift**: Grid-based clustering algorithm  
+- **High Performance**: C++ implementations with Cython wrappers and parallel processing
+- **Scikit-learn Compatible**: Familiar API with both class and functional interfaces
 
 ## Installation
 
@@ -15,146 +16,109 @@ Fast clustering algorithms for Python.
 # Basic installation
 uv sync
 
-# Install with benchmark dependencies (includes scikit-learn)
+# Install with benchmark dependencies
 uv sync --all-extras
-
-# Alternative: specific extra
-uv sync --extra benchmark
 ```
 
 ## Requirements
 
-- Python ≥ 3.12
-- NumPy ≥ 2.2.6
+- Python ≥ 3.10
+- NumPy ≥ 2.0
 - C++ compiler with C++17 support
+- OpenMP support
 
-### Optional Dependencies
-
-- `scikit-learn>=1.7.0` (for benchmarks)
-
-## Usage
+## Quick Start
 
 ### Basic Usage
 
 ```python
 import numpy as np
-from shiftclustering import MeanShiftPP, GridShift
+from shiftclustering import meanshiftpp, localshift, gridshift
 
-# Create sample data
+# Generate sample data
 X = np.random.randn(1000, 2).astype(np.float32)
 
-# MeanShiftPP clustering
+# MeanShift++ clustering
+labels = meanshiftpp(X, bandwidth=1.0)
+
+# GridShift clustering  
+labels = gridshift(X, bandwidth=1.0)
+
+# For 3D point cloud optimization (cryo-EM)
+atoms = np.random.rand(100, 3) * 50
+density_map = np.random.rand(50, 50, 50)
+optimized_atoms = localshift(atoms, density_map, fmaxd=5.0, fsiv=0.1)
+```
+
+### Class-based Interface (Scikit-learn compatible)
+
+```python
+from shiftclustering import MeanShiftPP, LocalShift, GridShift
+
+# MeanShiftPP
 ms = MeanShiftPP(bandwidth=1.0, max_iter=300)
 labels = ms.fit_predict(X)
 
-# GridShift clustering  
-gs = GridShift(bandwidth=1.0, max_iters=300)
-labels = gs.fit_predict(X)
+# LocalShift for cryo-EM optimization
+ls = LocalShift(fmaxd=5.0, fsiv=0.1, n_steps=100)
+optimized_atoms = ls.fit_predict(atoms, density_map)
 ```
 
-## Benchmarks
-
-The package includes benchmarks to evaluate performance:
-
-```bash
-# Install with benchmark dependencies
-uv sync --all-extras
-
-# Run algorithm comparison benchmark
-cd benchmark
-uv run python benchmark_sklearn.py
-```
-
-See the [benchmark README](benchmark/README.md) for detailed information.
-
-## API Reference
+## Available Algorithms
 
 ### MeanShiftPP
+Fast implementation of mean shift clustering with optimized binning strategy.
 
-```python
-MeanShiftPP(bandwidth, threshold=1e-4, max_iter=300)
-```
+### GridShift  
+Grid-based clustering algorithm for large datasets.
 
-**Parameters:**
-- `bandwidth`: Radius for binning points
-- `threshold`: Stop when L2 norm between iterations < threshold  
-- `max_iter`: Maximum number of iterations
+### LocalShift
+3D point cloud optimization algorithm for cryo-EM structure refinement. Iteratively shifts points towards local maxima in density maps using Gaussian kernel weighting.
 
-### GridShift
+**Citation Required**: If you use LocalShift in your research, please cite:
 
-```python
-GridShift(bandwidth, threshold=1e-4, max_iters=300)
-```
+> Terashi, Genki, and Daisuke Kihara. "De novo main-chain modeling for EM maps using MAINMAST." *Nature Communications* 9, no. 1 (2018): 1618.
+> 
+> https://www.nature.com/articles/s41467-018-04053-7
 
-**Parameters:**
-- `bandwidth`: Radius for binning points
-- `threshold`: Stop when L2 norm between iterations < threshold
-- `max_iters`: Maximum number of iterations  
+## Performance
+
+The package provides significant speedups over pure Python implementations:
+- **LocalShift**: ~10x faster than Numba implementation
+- **MeanShiftPP**: ~11x faster than sklearn.cluster.MeanShift  
+- **GridShift**: ~80x faster than sklearn.cluster.MeanShift
+
+See [benchmark/](benchmark/) for detailed performance comparisons.
 
 ## Project Structure
 
 ```
 shiftclustering/
 ├── include/          # C++ header files
-│   ├── gridshift.h   # GridShift algorithm
-│   ├── meanshiftpp.h # MeanShiftPP algorithm  
-│   └── utils.h       # Utility functions
-├── src/              # Cython source files
-│   ├── _gridshift.pyx
-│   └── _meanshiftpp.pyx
+├── src/              # Cython implementation files  
 └── __init__.py       # Main module
 
 benchmark/            # Performance benchmarks
-├── benchmark_sklearn.py  # Algorithm comparison
-└── README.md            # Benchmark documentation
 ```
 
 ## Building from Source
 
-The package uses scikit-build-core for building C++ extensions:
-
 ```bash
 # Development installation
-uv sync
+uv sync --all-extras
 
 # Reinstall with rebuild
-uv sync --reinstall
-
-# Install with all extras (benchmarks, etc.)
-uv sync --all-extras
+uv sync --all-extras --reinstall
 ```
-
-**Build Requirements:**
-- CMake ≥ 3.15
-- C++ compiler with C++17 support
-- Cython ≥ 3.1.2
-- NumPy ≥ 1.20.0 
 
 ## License
 
-[Your License Here]
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes
-4. Add tests and run benchmarks
-5. Submit a pull request
-
-## Changelog
-
-### v0.1.0
-- Initial release with MeanShiftPP and GridShift algorithms
-- Reorganized project structure with separate include/ and src/ directories
-- Scikit-build-core integration for robust C++ extension building
-- Comprehensive benchmark suite for performance evaluation
+GPL-3.0 License. See [LICENSE](LICENSE) for details.
 
 ## Acknowledgements
 
-This repo is based on the following repository
-
+This project builds upon:
 - [meanshiftpp](https://github.com/jenniferjang/meanshiftpp)
 - [GridShift](https://github.com/abhisheka456/GridShift)
 
-Please cite their papers if you use this package.
+Please cite the original papers when using these algorithms.
