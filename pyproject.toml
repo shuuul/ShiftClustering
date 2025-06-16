@@ -1,28 +1,28 @@
 [project]
 name = "shiftclustering"
-version = "0.1.0"
+version = "0.1.1"
 description = "ShiftClustering is a Python package for clustering data using the MeanShiftPP and GridShift algorithms."
 readme = "README.md"
 authors = [
     { name = "Shu Li", email = "zetarylee@gmail.com" }
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.10, <3.13"
 dependencies = [
-    "numpy>=2",
+    "numpy>=1.26",
 ]
 
 [project.optional-dependencies]
 benchmark = [
-    "numba>=0.61.2",
+    "numba>=0.60",
     "scikit-learn>=1.7",
-    "torch>=2.7.1",
+    "torch>=2.7.0",
 ]
 
 [build-system]
 requires = [
     "scikit-build-core>=0.8.0",
-    "cython>=3.1.2",
-    "numpy>=1.20.0",
+    "cython>=3.1",
+    "numpy>=1.26.0",
 ]
 build-backend = "scikit_build_core.build"
 
