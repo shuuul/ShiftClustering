@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.15...3.27)
 project(shiftclustering LANGUAGES C CXX)
 
 # Find Python with NumPy - this is the proper way with scikit-build-core
-find_package(Python 3.12 COMPONENTS Interpreter Development.Module NumPy REQUIRED)
+find_package(Python 3.10 COMPONENTS Interpreter Development.Module NumPy REQUIRED)
 
 # Find Cython
 find_program(CYTHON_EXECUTABLE cython)
