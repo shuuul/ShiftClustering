@@ -4,6 +4,15 @@
 # cython: wraparound=False
 # cython: initializedcheck=False
 # cython: language_level=3
+"""
+Cython wrapper for the GridShift clustering algorithm.
+
+The C++ kernel (``gridshift.h``) performs grid-based clustering by
+iteratively computing neighbour means on a binned grid and re-binning
+until no membership changes occur.  Unlike MeanShiftPP, GridShift
+tracks cluster membership directly on the grid rather than on individual
+data points, making it faster for large datasets.
+"""
 
 from collections import Counter
 
@@ -109,17 +118,37 @@ def gridshift(X, bandwidth, threshold=1.0e-4, max_iters=300, return_centers=Fals
 
 class GridShift:
     """
+    Scikit-learn-style interface for GridShift clustering.
+
+    GridShift operates on a grid representation of the data. At each
+    iteration it accumulates neighbor statistics across 3^d adjacent
+    bins and re-bins the shifted means. Convergence is reached when no
+    bin memberships change between iterations.
+
     Parameters
     ----------
+    bandwidth : float
+        Radius for binning points. Coordinates are discretised via
+        floor division by this value.
+    threshold : float, default=1.0e-4
+        Convergence criterion — stop when the L2 norm of the shift
+        between consecutive iterations falls below this value.
+    max_iters : int, default=300
+        Maximum number of shift iterations.
 
-    bandwidth: Radius for binning points. Points are assigned to the bin
-               corresponding to floor division by bandwidth
+    Attributes
+    ----------
+    bandwidth : float
+    threshold : float
+    max_iters : int
 
-    threshold: Stop shifting if the L2 norm between max_iters is less than
-               threshold
-
-    max_iters: Maximum number of max_iters to run
-
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from shiftclustering import GridShift
+    >>> X = np.random.rand(1000, 2).astype(np.float32)
+    >>> gs = GridShift(bandwidth=0.1)
+    >>> labels = gs.fit_predict(X)
     """
 
     def __init__(self, bandwidth, threshold=1.0e-4, max_iters=300):
@@ -129,21 +158,20 @@ class GridShift:
 
     def fit_predict(self, X, return_centers=False):
         """
-        Determines the clusters in either `max_iters` or when the L2
-        norm of consecutive max_iters is less than `threshold`, whichever
-        comes first.
-        Each shift has two steps: First, points are binned based on floor
-        division by bandwidth. Second, each bin is shifted to the
-        weighted mean of its 3**d neighbors.
-        Lastly, points that are in the same bin are clustered together.
+        Cluster the data and return labels.
 
         Parameters
         ----------
-        X: Data matrix. Each row should represent a datapoint in
-           Euclidean space
+        X : array-like, shape (n_samples, n_features)
+            Input data points. Will be cast to float32 C-contiguous.
+        return_centers : bool, default=False
+            If True, return ``(centers, labels)`` instead of just labels.
 
         Returns
-        ----------
-        (n, ) cluster labels
+        -------
+        labels : ndarray, shape (n_samples,)
+            Cluster label for each sample.
+        centers : ndarray, shape (n_clusters, n_features), optional
+            Only returned when ``return_centers=True``.
         """
         return gridshift(X, self.bandwidth, self.threshold, self.max_iters, return_centers)

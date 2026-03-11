@@ -23,7 +23,7 @@ uv sync --all-extras
 ## Requirements
 
 - Python ≥ 3.10
-- NumPy ≥ 2.0
+- NumPy ≥ 1.26
 - C++ compiler with C++17 support
 - OpenMP support
 

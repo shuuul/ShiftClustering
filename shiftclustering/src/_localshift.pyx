@@ -6,6 +6,19 @@
 # cython: wraparound=False
 # cython: initializedcheck=False
 # cython: language_level=3
+"""
+Cython wrapper for the LocalShift 3D point-cloud optimisation algorithm.
+
+The C++ kernel (``localshift.h``) shifts a single point towards the local
+maximum of a 3D reference density map using Gaussian kernel weighting.
+This module parallelises the per-point calls across all available cores
+via OpenMP ``prange``.
+
+Reference
+---------
+Terashi, G. and Kihara, D. "De novo main-chain modeling for EM maps
+using MAINMAST." *Nature Communications* 9, 1618 (2018).
+"""
 
 cimport numpy as cnp
 import numpy as np

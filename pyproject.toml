@@ -1,6 +1,6 @@
 [project]
 name = "shiftclustering"
-version = "0.1.2"
+version = "0.1.3"
 description = "ShiftClustering is a Python package for clustering data using the MeanShiftPP and GridShift algorithms."
 readme = "README.md"
 authors = [
@@ -20,9 +20,9 @@ benchmark = [
 
 [build-system]
 requires = [
-    "scikit-build-core>=0.8.0",
+    "scikit-build-core>=0.11",
     "cython>=3.1",
-    "numpy>=1.26.0",
+    "numpy>=1.26",
 ]
 build-backend = "scikit_build_core.build"
 

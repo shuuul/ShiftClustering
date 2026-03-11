@@ -1,25 +1,28 @@
 """
-ShiftClustering: Fast clustering algorithms with OpenMP parallel support
+ShiftClustering: Fast clustering algorithms with C++/Cython and OpenMP support.
 
-This package provides implementations of:
-- MeanShiftPP: An optimized mean shift clustering algorithm
-- LocalShift: A local shift algorithm for 3D point cloud optimization (cryo-EM)
-- GridShift: A grid-based clustering algorithm
+Provides three algorithms with both functional and scikit-learn-style class APIs:
 
-The algorithms support efficient processing and are optimized for performance.
+- :func:`meanshiftpp` / :class:`MeanShiftPP`
+    Optimized mean shift clustering using grid-based binning and neighbor shifting.
+- :func:`localshift` / :class:`LocalShift`
+    3D point cloud optimization for cryo-EM density maps via Gaussian kernel
+    weighted shifting with OpenMP parallelism.
+- :func:`gridshift` / :class:`GridShift`
+    Grid-based iterative clustering that operates directly on binned representations.
+
+All algorithms accept float32 arrays and are implemented as Cython wrappers
+around C++ kernels for maximum throughput.
 """
 
-# Import class interfaces
 from ._meanshiftpp import MeanShiftPP, meanshiftpp
 from ._localshift import LocalShift, localshift
 from ._gridshift import GridShift, gridshift
 
-__version__ = "0.1.0"
+__version__ = "0.1.2"
 
 __all__ = [
-    # Class interfaces
     "MeanShiftPP", "LocalShift", "GridShift",
-    # Functional interfaces
-    "meanshiftpp", "localshift", "gridshift"
+    "meanshiftpp", "localshift", "gridshift",
 ]
 

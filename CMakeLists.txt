@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15...3.27)
+cmake_minimum_required(VERSION 3.15...3.31)
 project(shiftclustering LANGUAGES C CXX)
 
 # Find Python with NumPy - this is the proper way with scikit-build-core
