@@ -1,13 +1,13 @@
 # ShiftClustering
 
-Fast clustering algorithms for Python with C++/Cython implementation and OpenMP parallel support.
+Fast clustering algorithms for Python with C++/nanobind implementation and OpenMP parallel support.
 
 ## Features
 
 - **MeanShiftPP**: Optimized mean shift clustering algorithm
 - **LocalShift**: Local shift algorithm for 3D point cloud optimization in cryo-EM contexts
 - **GridShift**: Grid-based clustering algorithm  
-- **High Performance**: C++ implementations with Cython wrappers and parallel processing
+- **High Performance**: C++ implementations with nanobind bindings and parallel processing
 - **Scikit-learn Compatible**: Familiar API with both class and functional interfaces
 
 ## Installation
@@ -94,8 +94,11 @@ See [benchmark/](benchmark/) for detailed performance comparisons.
 
 ```
 shiftclustering/
-├── include/          # C++ header files
-├── src/              # Cython implementation files  
+├── include/          # C++ header files (algorithm kernels)
+├── src/              # nanobind binding sources
+├── _meanshiftpp.py   # Python wrapper
+├── _gridshift.py
+├── _localshift.py
 └── __init__.py       # Main module
 
 benchmark/            # Performance benchmarks

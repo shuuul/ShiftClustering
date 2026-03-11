@@ -1,6 +1,6 @@
 [project]
 name = "shiftclustering"
-version = "0.1.3"
+version = "0.2.0"
 description = "ShiftClustering is a Python package for clustering data using the MeanShiftPP and GridShift algorithms."
 readme = "README.md"
 authors = [
@@ -17,30 +17,29 @@ benchmark = [
     "scikit-learn>=1.7",
     "torch>=2.7.0",
 ]
+test = [
+    "pytest>=8.0",
+]
 
 [build-system]
 requires = [
     "scikit-build-core>=0.11",
-    "cython>=3.1",
-    "numpy>=1.26",
+    "nanobind>=2.0",
 ]
 build-backend = "scikit_build_core.build"
 
 [tool.scikit-build]
-# Build settings
 build.verbose = true
 logging.level = "INFO"
 
-# CMake configuration
 cmake.args = [
     "-DCMAKE_BUILD_TYPE=Release",
 ]
 
-# Explicitly enable Cython support
-experimental = true
+[tool.pytest.ini_options]
+testpaths = ["tests"]
 
 [tool.cibuildwheel]
-# Optional: if you plan to build wheels for multiple platforms
 build = "cp310-* cp311-* cp312-*"
 skip = "pp* *-musllinux*"
 
